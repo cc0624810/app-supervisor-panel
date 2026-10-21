@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用监督面板</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, sans-serif; background: #f5f5f5; }
+        .container { max-width: 500px; margin: 20px auto; padding: 20px; }
+        .app-item { background: white; padding: 20px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .app-name { font-size: 18px; font-weight: 600; color: #333; }
+        .switch { position: relative; width: 60px; height: 32px; background: #ccc; border-radius: 16px; cursor: pointer; transition: 0.3s; }
+        .switch.locked { background: #ff4444; }
+        .switch-slider { position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: 0.3s; }
+        .switch.locked .switch-slider { transform: translateX(28px); }
+        .footer { background: white; padding: 20px; border-radius: 12px; text-align: center; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stats { font-size: 16px; color: #666; }
+        .count { font-size: 32px; font-weight: bold; color: #ff4444; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div v-for="app in apps" :key="app.id" class="app-item">
+                <span class="app-name">{{ app.name }}</span>
+                <div :class="['switch', { locked: app.locked }]" @click="toggleLock(app)">
+                    <div class="switch-slider"></div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="stats">已锁住的应用</div>
+                <div class="count">{{ lockedCount }}</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    apps: [
+                        { id: 1, name: '抖音', locked: false },
+                        { id: 2, name: '快手', locked: false },
+                        { id: 3, name: '小红书', locked: false }
+                    ]
+                }
+            },
+            computed: {
+                lockedCount() {
+                    return this.apps.filter(app => app.locked).length;
+                }
+            },
+            methods: {
+                toggleLock(app) {
+                    app.locked = !app.locked;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
